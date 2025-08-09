@@ -398,3 +398,24 @@ GET /health
 ## License
 
 This project is licensed under the ISC License. # yarnsign-backend
+
+## Docker
+
+Run the backend and MongoDB with Docker:
+
+```bash
+docker compose up -d --build
+```
+
+Environment defaults used in compose:
+- MONGODB_URI=mongodb://mongo:27017/yardsign
+- PORT=3001
+- CORS_ORIGIN=http://localhost:5173
+- UPLOAD_PATH=/app/uploads
+- MAX_FILE_SIZE=5242880
+
+Uploaded media persists in the `uploads_data` volume. Stop the stack with:
+
+```bash
+docker compose down
+```
