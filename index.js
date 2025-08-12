@@ -52,7 +52,8 @@ app.use((req, res, next) => {
     "http://localhost:5175", 
     "http://localhost:5174",
     "http://localhost:5173",
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "https://yaadsign.com"
   ];
   
   const origin = req.headers.origin;
