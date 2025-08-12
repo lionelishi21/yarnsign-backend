@@ -32,9 +32,6 @@ const server = createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      "http://localhost:5176",
-      "http://localhost:5175", 
-      "http://localhost:5174",
       "http://localhost:5173",
       "https://yaadsign.com"
     ],
@@ -42,50 +39,16 @@ const io = new Server(server, {
   }
 });
 
-// CORS middleware
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path} - Origin: ${req.headers.origin}`);
-  
-  // Allow multiple origins for development
-  const allowedOrigins = [
-    "http://localhost:5176",
-    "http://localhost:5175", 
-    "http://localhost:5174",
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "https://yaadsign.com"
-  ];
-  
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  
-  if (req.method === 'OPTIONS') {
-    console.log('Handling OPTIONS request');
-    res.status(200).end();
-    return;
-  }
-  
-  next();
-});
 
 app.use(cors({
-  origin: [
-    "http://localhost:5176",
-    "http://localhost:5175", 
-    "http://localhost:5174",
-    "http://localhost:5173",
-    "http://localhost:3000"
-  ],
-  credentials: true,
+  origin: function(origin, callback) {
+    callback(null, true); // allow all origins dynamically
+  },
+  credentials: true, // if you need to send cookies or auth headers
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "Origin", "X-Requested-With", "Accept"]
 }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -94,7 +57,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/yardsign')
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/yardsign')
   .then(() => {
     console.log('Connected to MongoDB');
   })
